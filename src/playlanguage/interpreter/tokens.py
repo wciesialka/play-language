@@ -2,6 +2,7 @@ from abc import ABCMeta, abstractmethod
 import struct
 from typing import List
 
+MAX_BYTE_SIZE = 4
 class TokenBuilder:
     '''Factory for creating tokens.'''
     def __init__(self, stack:List[int]):
@@ -12,11 +13,15 @@ def add_builder(name:str):
         instead of rewriting similar method headers every time.
         :param name: Name of the class.
         :type name: str'''
+    name = f"build_{name}"
+    if name in TokenBuilder.__dict__.keys():
+        raise ValueError(f"Attribute \"{name}\" already exists in TokenBuilder class.")
+
     def decorate(cls):
         def func(self,*args):
             return cls(self.stack,*args)
 
-        setattr(TokenBuilder,f"build_{name}",func)
+        setattr(TokenBuilder,name,func)
     return decorate
 
 class Token:
@@ -69,30 +74,71 @@ class Formatter(Token):
 
     def func(self):
         #size = getsizeof(self.stack)
-        packed = struct.pack(f"{len(self.stack)}l", *self.stack)
+        packed = struct.pack(f"{len(self.stack)}i", *self.stack)
         return self.format(packed)
 
 # Special Tokens
 @add_builder("push")
-class Push(Token):
+class PushToken(Token):
 
     def __init__(self, stack:List[int], value:int):
         super().__init__(stack)
+        
+        if abs(value) > (1 << (MAX_BYTE_SIZE*8)):
+            raise ValueError(f"Value of \"{value}\" exceeds max byte size of {MAX_BYTE_SIZE}.")
         self.value = value
 
     def func(self):
         self.stack.append(self.value)
 
 @add_builder("pop")
-class Pop(Token):
+class PopToken(Token):
 
     def func(self):
         return self.stack.pop()
 
-# Unary Operation Tokens
+@add_builder("peek")
+class PeekToken(Token):
 
+    def func(self):
+        return self.stack[-1]
+
+@add_builder("empty")
+class EmptyToken(Token):
+
+    def func(self):
+        del self.stack[:]
+
+@add_builder("non_op")
+class NonOpToken(Token):
+
+    def func(self):
+        pass
+
+@add_builder("chr")
+class ChrToken(Token):
+
+    def func(self):
+        return chr(self.stack[-1])
+
+# Unary Operation Tokens
+@add_builder("not")
+class NotToken(UnaryOperation):
+
+    def operation(self, a: int):
+        if a:
+            return 0
+        else:
+            return 1
+
+@add_builder("negate")
+class NegateToken(UnaryOperation):
+
+    def operation(self, a: int):
+        return -a
 
 # Binary Operation Tokens
+
 @add_builder("add")
 class AddToken(BinaryOperation):
 
@@ -122,7 +168,7 @@ class DivideToken(BinaryOperation):
 class ToStringToken(Formatter):
     def format(self, packed:bytes):
         unpacked = struct.unpack_from(f'{len(packed)}s', buffer=packed)[0]
-        return unpacked.decode('utf-8')
+        return unpacked.decode('utf-32')
 
 @add_builder("tofloat")
 class ToFloatToken(Formatter):
