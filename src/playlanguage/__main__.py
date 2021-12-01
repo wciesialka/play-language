@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import argparse
 import sys
 import interpreter.tokens as tokens
@@ -6,9 +8,9 @@ def main(args):
     stack = []
     operations = []
     builder = tokens.TokenBuilder(stack)
-    operations.append(builder.build_push(70))
-    operations.append(builder.build_push(1))
-    operations.append(builder.build_subtract())
+    operations.append(builder.build_push(64))
+    operations.append(builder.build_push(64))
+    operations.append(builder.build_multiply())
     operations.append(builder.build_pop())
     for token in operations:
         print(token())
