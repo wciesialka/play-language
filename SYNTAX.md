@@ -21,5 +21,6 @@ The following are valid tokens:
 | ~ | Negate | Pop from the stack and push the negative value onto the stack. |
 | \( | If | If the top number is 1, continue. Otherwise, pass. |
 | \) | End If | End If block. |
+| = | Equality | Pop two numbers from the stack. If equal, push 1. Push 0 otherwise. |
 
 Examples can be found in [examples/](examples/)
