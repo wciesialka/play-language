@@ -24,6 +24,7 @@ def add_builder(name:str):
             return cls(self._stack,*args)
 
         setattr(TokenBuilder,name,func)
+        return cls
 
         
     return decorate
@@ -125,6 +126,24 @@ class ChrToken(Token):
     def func(self):
         return chr(self.stack[-1])
 
+@add_builder("copy")
+class CopyToken(Token):
+
+    def func(self):
+        self.stack.append(self.stack[-1])
+
+@add_builder("if")
+class IfToken(Token):
+
+    def func(self):
+        pass
+
+@add_builder("endif")
+class EndIfToken(Token):
+
+    def func(self):
+        pass
+
 # Unary Operation Tokens
 @add_builder("not")
 class NotToken(UnaryOperation):
@@ -179,17 +198,13 @@ class OrToken(BinaryOperation):
     def operation(self, a: int, b: int):
         return a | b
 
-@add_builder("left_shift")
-class LeftShiftToken(BinaryOperation):
+@add_builder("equality")
+class EqualityToken(BinaryOperation):
 
     def operation(self, a: int, b: int):
-        return a << b
-
-@add_builder("right_shift")
-class RightShiftToken(BinaryOperation):
-
-    def operation(self, a: int, b: int):
-        return a >> b
+        if a == b:
+            return 1
+        return 0
 
 # Formatter Tokens
 @add_builder("tostring")

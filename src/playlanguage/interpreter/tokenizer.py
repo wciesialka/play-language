@@ -25,7 +25,19 @@ class Tokenizer:
             "*": self.__builder.build_multiply,
             "/": self.__builder.build_divide,
             ".": self.__builder.build_pop,
-            ",": self.__builder.build_non_op
+            ",": self.__builder.build_non_op,
+            ":": self.__builder.build_peek,
+            "e": self.__builder.build_empty,
+            "c": self.__builder.build_chr,
+            "!": self.__builder.build_not,
+            "~": self.__builder.build_negate,
+            "&": self.__builder.build_and,
+            "|": self.__builder.build_or,
+            "s": self.__builder.build_tostring,
+            "?": self.__builder.build_copy,
+            "(": self.__builder.build_if,
+            ")": self.__builder.build_endif,
+            "=": self.__builder.build_equality
         }
 
         tokens:List = []
