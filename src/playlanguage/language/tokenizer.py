@@ -67,7 +67,8 @@ class Tokenizer:
                     logging.debug("Reading character \"%s\"",char)
                     # Whitespace
                     if char.isspace():
-                        pass
+                        if self.__reading_number:
+                            tokens.append(self.__build_push())
                     # String
                     elif char == '"':
                         stringing = True
