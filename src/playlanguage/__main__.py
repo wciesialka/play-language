@@ -2,12 +2,13 @@
 
 import argparse
 import logging
-from playlanguage.language.interpreter import interpret
+from playlanguage.language.interpreter import Interpreter
 
 def main(args):
     source_code = args.input.read().strip()
 
-    interpret(source_code)
+    interpreter = Interpreter(source_code)
+    interpreter.interpret()
     print()
 
 def entry():

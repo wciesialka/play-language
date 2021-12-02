@@ -144,6 +144,12 @@ class EndIfToken(Token):
     def func(self):
         pass
 
+@add_builder("else")
+class ElseToken(Token):
+
+    def func(self):
+        pass
+
 # Unary Operation Tokens
 @add_builder("not")
 class NotToken(UnaryOperation):

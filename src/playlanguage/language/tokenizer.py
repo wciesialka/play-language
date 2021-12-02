@@ -40,7 +40,8 @@ class Tokenizer:
             "=": self.__builder.build_equality,
             ">": self.__builder.build_greater_than,
             "<": self.__builder.build_less_than,
-            "%": self.__builder.build_modulo
+            "%": self.__builder.build_modulo,
+            "{": self.__builder.build_else
         }
 
         tokens:List = []
