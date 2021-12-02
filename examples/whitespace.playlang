@@ -1,4 +1,5 @@
 # Whitespace is ignored #
-12.                  24.10c
+12       .       
+10c
 # Except when breaking up a number! #
 1 2 .
