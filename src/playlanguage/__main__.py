@@ -2,7 +2,6 @@
 
 import argparse
 import logging
-import sys
 from playlanguage.language.interpreter import interpret
 
 def main(args):
@@ -20,9 +19,9 @@ def entry():
         "c": logging.CRITICAL 
     }
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument("input",type=argparse.FileType("r"),default=sys.stdin,nargs='?')
-    parser.add_argument("-l","--level",type=str.lower,choices=levels.keys(),default='w')
+    parser = argparse.ArgumentParser(prog="playlanguage",description="Interpreter for the Playlanguage.")
+    parser.add_argument("input",type=argparse.FileType("r"),help="Input file.")
+    parser.add_argument("-l","--level",type=str.lower,choices=levels.keys(),default='w',help="Logging level.")
     args = parser.parse_args()
     
     logging.basicConfig(level=levels[args.level])
