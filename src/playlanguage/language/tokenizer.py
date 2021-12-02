@@ -73,7 +73,6 @@ class Tokenizer:
                         else:
                             tokens.append(self.__builder.build_push(ord(char)))
                 else:
-                    logging.debug("Reading character \"%s\"",char)
                     # Whitespace
                     if char.isspace():
                         if self.__reading_number:
@@ -86,11 +85,13 @@ class Tokenizer:
                         comment = True
                     # Digit
                     elif char.isdigit():
+                        logging.debug("Reading digit \"%s\"",char)
                         self.__reading_number = True
                         self.__number *= 10
                         self.__number += int(char)
                     # Operation
                     elif char in symbols.keys():
+                        logging.debug("Reading character \"%s\"",char)
                         # If we're done reading a number
                         if self.__reading_number:
                             tokens.append(self.__build_push())

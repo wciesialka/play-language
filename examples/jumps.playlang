@@ -2,5 +2,7 @@
 0$ # We add a zero and save it to the register. # 
 r # We set our return point. #
 ^1+$ # We load our register, add one to it, and save it. #
-5<q # If the top of our stack is less than 5, we jump back to our restore point. #
+100<q # If the top of our stack is less than 5, we jump back to our restore point. #
 e"Our value: "s^. # Load the saved value and pop it. #
+
+# Our full program: 0$r^1+$100<qe"Our value: "s^. #
