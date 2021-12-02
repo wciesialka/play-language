@@ -3,10 +3,12 @@ import struct
 from typing import List
 
 MAX_BYTE_SIZE = 4
+
 class TokenBuilder:
     '''Factory for creating tokens.'''
+
     def __init__(self, stack:List[int]):
-        self.stack = stack
+        self._stack = stack
 
 def add_builder(name:str):
     '''This decorator allows us to add build_x methods to TokenBuilder using a decorator\
@@ -19,9 +21,11 @@ def add_builder(name:str):
 
     def decorate(cls):
         def func(self,*args):
-            return cls(self.stack,*args)
+            return cls(self._stack,*args)
 
         setattr(TokenBuilder,name,func)
+
+        
     return decorate
 
 class Token:
@@ -163,15 +167,33 @@ class DivideToken(BinaryOperation):
     def operation(self, a: int, b: int):
         return a//b
 
+@add_builder("and")
+class AndToken(BinaryOperation):
+
+    def operation(self, a: int, b: int):
+        return a & b
+
+@add_builder("or")
+class OrToken(BinaryOperation):
+
+    def operation(self, a: int, b: int):
+        return a | b
+
+@add_builder("left_shift")
+class LeftShiftToken(BinaryOperation):
+
+    def operation(self, a: int, b: int):
+        return a << b
+
+@add_builder("right_shift")
+class RightShiftToken(BinaryOperation):
+
+    def operation(self, a: int, b: int):
+        return a >> b
+
 # Formatter Tokens
 @add_builder("tostring")
 class ToStringToken(Formatter):
     def format(self, packed:bytes):
         unpacked = struct.unpack_from(f'{len(packed)}s', buffer=packed)[0]
         return unpacked.decode('utf-32')
-
-@add_builder("tofloat")
-class ToFloatToken(Formatter):
-    def format(self, packed:bytes):
-        unpacked = struct.unpack_from(f'{len(packed)}f', buffer=packed)[0]
-        return unpacked
