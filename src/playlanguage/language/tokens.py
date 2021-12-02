@@ -44,6 +44,9 @@ class Token:
     def __call__(self, *args, **kwargs):
         return self.func(*args, **kwargs)
 
+    def __str__(self):
+        return self.__class__.__name__
+
 class BinaryOperation(Token):
 
     __metaclass__ = ABCMeta
@@ -96,6 +99,9 @@ class PushToken(Token):
     def func(self):
         self.stack.append(self.value)
 
+    def __str__(self):
+        return f"PushToken({self.value})"
+
 @add_builder("pop")
 class PopToken(Token):
 
@@ -146,6 +152,37 @@ class EndIfToken(Token):
 
 @add_builder("else")
 class ElseToken(Token):
+
+    def func(self):
+        pass
+
+@add_builder("return")
+class ReturnToken(Token):
+
+    def func(self):
+        pass
+
+@add_builder("jump")
+class JumpToken(Token):
+
+    def func(self):
+        pass
+
+@add_builder("conditional_jump")
+class ConditionalJumpToken(Token):
+
+    def func(self):
+        pass
+
+@add_builder("save")
+class SaveToken(Token):
+
+    def func(self):
+        pass
+
+
+@add_builder("load")
+class LoadToken(Token):
 
     def func(self):
         pass

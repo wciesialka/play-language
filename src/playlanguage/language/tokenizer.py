@@ -41,7 +41,12 @@ class Tokenizer:
             ">": self.__builder.build_greater_than,
             "<": self.__builder.build_less_than,
             "%": self.__builder.build_modulo,
-            "{": self.__builder.build_else
+            "{": self.__builder.build_else,
+            "r": self.__builder.build_return,
+            "j": self.__builder.build_jump,
+            "q": self.__builder.build_conditional_jump,
+            "$": self.__builder.build_save,
+            "^": self.__builder.build_load
         }
 
         tokens:List = []

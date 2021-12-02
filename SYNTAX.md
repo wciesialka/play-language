@@ -26,6 +26,11 @@ The following are valid tokens:
 | = | Equality | Pop two numbers from the stack. If equal, push 1. Push 0 otherwise. |
 | > | Greater Than | Pop two numbers from the stack. If the first number is greater than the second, push 1 onto the stack. Push 0 otherwise. |
 | < | Less Than | Pop two numbers from the stack. If the first number is less than the second, push 1 onto the stack. Push 0 otherwise. |
+| r | Return | Set return point. |
+| j | Jump | Jump to return point. |
+| q | Conditional Jump | Jump to return point if the top of the stack is not zero. |
+| $ | Save | Save the top of the stack to the register.
+| ^ | Load | Push the register to the top of the stack.
 
 You can also enter string mode. While in string mode, you can type characters. Each character will generate a push operation with it's ord value. 
 The following tokens are unique to string mode:
