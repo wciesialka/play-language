@@ -186,6 +186,12 @@ class DivideToken(BinaryOperation):
     def operation(self, a: int, b: int):
         return a//b
 
+@add_builder("modulo")
+class ModuloToken(BinaryOperation):
+
+    def operation(self, a: int, b: int):
+        return a % b
+
 @add_builder("and")
 class AndToken(BinaryOperation):
 
@@ -203,6 +209,22 @@ class EqualityToken(BinaryOperation):
 
     def operation(self, a: int, b: int):
         if a == b:
+            return 1
+        return 0
+
+@add_builder("greater_than")
+class GreaterThanToken(BinaryOperation):
+
+    def operation(self, a: int, b: int):
+        if a > b:
+            return 1
+        return 0
+
+@add_builder("less_than")
+class LessThanToken(BinaryOperation):
+
+    def operation(self, a: int, b: int):
+        if a < b:
             return 1
         return 0
 
