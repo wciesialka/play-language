@@ -23,14 +23,15 @@ The following are valid tokens:
 | \) | End If | End If block. |
 | = | Equality | Pop two numbers from the stack. If equal, push 1. Push 0 otherwise. |
 
-You can also enter string mode:
+You can also enter string mode. While in string mode, you can type characters. Each character will generate a push operation with it's ord value. 
+The following tokens are unique to string mode:
 
 | Symbol | Name | Effect |
 | ------ | ---- | ------ |
 | "      | Quote | Enter/exit string mode. |
 | \\     | Escape | Escape the next character (string mode only.) |
 
-Additionally, you can enter comment mode:
+Additionally, you can enter comment mode. While in comment mode, nothing you write will generate tokens. Then following tokens are unique to comment mode:
 
 | Symbol | Name | Effect |
 | ------ | ---- | ------ |
