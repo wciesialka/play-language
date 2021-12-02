@@ -1,5 +1,5 @@
-import interpreter.tokenizer as tokenizer
-import interpreter.tokens as tokens
+import playlanguage.language.tokenizer as tokenizer
+import playlanguage.language.tokens as tokens
 import logging
 
 def interpret(program:str):

@@ -1,4 +1,4 @@
-import interpreter.tokens as tokens
+import playlanguage.language.tokens as tokens
 import logging
 from typing import Callable, List, Dict
 
