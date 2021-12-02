@@ -23,4 +23,17 @@ The following are valid tokens:
 | \) | End If | End If block. |
 | = | Equality | Pop two numbers from the stack. If equal, push 1. Push 0 otherwise. |
 
+You can also enter string mode:
+
+| Symbol | Name | Effect |
+| ------ | ---- | ------ |
+| "      | Quote | Enter/exit string mode. |
+| \\     | Escape | Escape the next character (string mode only.) |
+
+Additionally, you can enter comment mode:
+
+| Symbol | Name | Effect |
+| ------ | ---- | ------ |
+| #      | Comment | Enter/Exit comment mode. |
+
 Examples can be found in [examples/](examples/)
