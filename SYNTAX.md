@@ -16,8 +16,8 @@ The following are valid tokens:
 | * | Multiply | Pop two numbers from stack and push product onto stack. |
 | / | Divide | Pop two numbers from stack and push (floor) quotient onto stack. |
 | % | Modulo | Pop two numbers from stack and push result of modulo operation onto stack. |
-| & | And | Pop two numbers from stack and push result of binary and onto stack. |
-| \| | Or | Pop two numbers from stack and push result of binary or onto stack. |
+| & | Bitwise And | Pop two numbers from stack and push result of bitwise and onto stack. |
+| \| | Bitwise Or | Pop two numbers from stack and push result of bitwise or onto stack. |
 | ! | Not | Pop from the stack. If the value is greater than 0, push 0. Otherwise, push 1. |
 | ~ | Negate | Pop from the stack and push the negative value onto the stack. |
 | \( | If | If the top number is 1, continue. Otherwise, pass. |

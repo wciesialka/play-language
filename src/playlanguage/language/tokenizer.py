@@ -1,25 +1,40 @@
-import playlanguage.language.tokens as tokens
+'''Module containing the Tokenizer class, which\
+     reads programs and turns them into tokens that can be run.'''
+
 import logging
 from typing import Callable, List, Dict
+import playlanguage.language.tokens as tokens
 
 class Tokenizer:
 
-    def __init__(self, stack:List[int]):
-        self.__builder = tokens.TokenBuilder(stack)
-        self.__number = 0
-        self.__reading_number = False
+    '''Class responsible for reading strings and turning them into a list of executable tokens.'''
 
-    def __build_push(self):
-        logging.info("Building push token %i",self.__number)
+    def __init__(self, stack: List[int]):
+        self.__builder: tokens.TokenBuilder = tokens.TokenBuilder(stack)
+        self.__number: int = 0
+        self.__reading_number: bool = False
+
+    def __build_push(self) -> tokens.PushToken:
+        '''Build a Push Token using the internal "number" value.'''
+
+        logging.info("Building push token %i", self.__number)
         token = self.__builder.build_push(self.__number)
         self.__number = 0
         self.__reading_number = False
         return token
 
-    def read(self, string:str):
+    def read(self, string: str) -> List[tokens.Token]:
+        '''Read source code and return a list of executable tokens.
+        :param string: The program to read.
+        :type string: str
+        :returns: A list of executable tokens.
+        :rtype: tokens.Token'''
+
         logging.info("Tokenizing program.")
 
-        symbols:Dict[str, Callable[[],]] = {
+        # This is our dictionary of symbols and what build function
+        # should be called when that symbol is encountered.
+        symbols: Dict[str, Callable[[], tokens.Token]] = {
             "+": self.__builder.build_add,
             "-": self.__builder.build_subtract,
             "*": self.__builder.build_multiply,
@@ -31,8 +46,8 @@ class Tokenizer:
             "c": self.__builder.build_chr,
             "!": self.__builder.build_not,
             "~": self.__builder.build_negate,
-            "&": self.__builder.build_and,
-            "|": self.__builder.build_or,
+            "&": self.__builder.build_band,
+            "|": self.__builder.build_bor,
             "s": self.__builder.build_tostring,
             "?": self.__builder.build_copy,
             "(": self.__builder.build_if,
@@ -49,11 +64,11 @@ class Tokenizer:
             "^": self.__builder.build_load
         }
 
-        tokens:List = []
+        token_list: List[tokens.Token] = []
 
-        escape = False
-        stringing = False
-        comment = False
+        escape: bool = False
+        stringing: bool = False
+        comment: bool = False
 
         for char in string:
 
@@ -63,7 +78,7 @@ class Tokenizer:
             else:
                 if stringing:
                     if escape:
-                        tokens.append(self.__builder.build_push(ord(char)))
+                        token_list.append(self.__builder.build_push(ord(char)))
                         escape = False
                     else:
                         if char == "\\":
@@ -71,12 +86,12 @@ class Tokenizer:
                         elif char == "\"":
                             stringing = False
                         else:
-                            tokens.append(self.__builder.build_push(ord(char)))
+                            token_list.append(self.__builder.build_push(ord(char)))
                 else:
                     # Whitespace
                     if char.isspace():
                         if self.__reading_number:
-                            tokens.append(self.__build_push())
+                            token_list.append(self.__build_push())
                     # String
                     elif char == '"':
                         stringing = True
@@ -85,25 +100,24 @@ class Tokenizer:
                         comment = True
                     # Digit
                     elif char.isdigit():
-                        logging.debug("Reading digit \"%s\"",char)
+                        logging.debug("Reading digit \"%s\"", char)
                         self.__reading_number = True
                         self.__number *= 10
                         self.__number += int(char)
                     # Operation
                     elif char in symbols.keys():
-                        logging.debug("Reading character \"%s\"",char)
+                        logging.debug("Reading character \"%s\"", char)
                         # If we're done reading a number
                         if self.__reading_number:
-                            tokens.append(self.__build_push())
-                        logging.info("Building token %s",char)
-                        tokens.append(symbols[char]())
+                            token_list.append(self.__build_push())
+                        logging.info("Building token %s", char)
+                        token_list.append(symbols[char]())
                     # Invalid
                     else:
                         raise NotImplementedError(f"Token \"{char}\" undefined.")
 
         # if last line was a push...
         if self.__reading_number:
-            tokens.append(self.__build_push())
-            
-        return tokens
+            token_list.append(self.__build_push())
 
+        return token_list
