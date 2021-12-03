@@ -10,7 +10,7 @@ LONG_DESCRIPTION = (THIS_DIRECTORY / "README.md").read_text()
 
 CONTENT = {
     "name": "playlanguage",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "author": "Willow Ciesialka",
     "author_email": "wciesialka@gmail.com",
     "url": "https://github.com/wciesialka/play-language",
