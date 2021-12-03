@@ -37,31 +37,69 @@ class Tokenizer:
             "?": self.__builder.build_copy,
             "(": self.__builder.build_if,
             ")": self.__builder.build_endif,
-            "=": self.__builder.build_equality
+            "=": self.__builder.build_equality,
+            ">": self.__builder.build_greater_than,
+            "<": self.__builder.build_less_than,
+            "%": self.__builder.build_modulo,
+            "{": self.__builder.build_else,
+            "r": self.__builder.build_return,
+            "j": self.__builder.build_jump,
+            "q": self.__builder.build_conditional_jump,
+            "$": self.__builder.build_save,
+            "^": self.__builder.build_load
         }
 
         tokens:List = []
 
+        escape = False
+        stringing = False
+        comment = False
+
         for char in string:
-            logging.debug("Reading character \"%s\"",char)
-            # Whitespace
-            if char.isspace():
-                pass
-            # Digit
-            elif char.isdigit():
-                self.__reading_number = True
-                self.__number *= 10
-                self.__number += int(char)
-            # Operation
-            elif char in symbols.keys():
-                # If we're done reading a number
-                if self.__reading_number:
-                    tokens.append(self.__build_push())
-                logging.info("Building token %s",char)
-                tokens.append(symbols[char]())
-            # Invalid
+
+            if comment:
+                if char == "#":
+                    comment = False
             else:
-                raise NotImplementedError(f"Token \"{char}\" undefined.")
+                if stringing:
+                    if escape:
+                        tokens.append(self.__builder.build_push(ord(char)))
+                        escape = False
+                    else:
+                        if char == "\\":
+                            escape = True
+                        elif char == "\"":
+                            stringing = False
+                        else:
+                            tokens.append(self.__builder.build_push(ord(char)))
+                else:
+                    # Whitespace
+                    if char.isspace():
+                        if self.__reading_number:
+                            tokens.append(self.__build_push())
+                    # String
+                    elif char == '"':
+                        stringing = True
+                    # Comment
+                    elif char == '#':
+                        comment = True
+                    # Digit
+                    elif char.isdigit():
+                        logging.debug("Reading digit \"%s\"",char)
+                        self.__reading_number = True
+                        self.__number *= 10
+                        self.__number += int(char)
+                    # Operation
+                    elif char in symbols.keys():
+                        logging.debug("Reading character \"%s\"",char)
+                        # If we're done reading a number
+                        if self.__reading_number:
+                            tokens.append(self.__build_push())
+                        logging.info("Building token %s",char)
+                        tokens.append(symbols[char]())
+                    # Invalid
+                    else:
+                        raise NotImplementedError(f"Token \"{char}\" undefined.")
 
         # if last line was a push...
         if self.__reading_number:
